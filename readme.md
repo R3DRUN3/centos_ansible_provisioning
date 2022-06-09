@@ -3,7 +3,7 @@
 <p align="center"><img width="180" height="180" src="https://github.com/yurijserrano/Github-Profile-Readme-Logos/blob/master/cloud/ansible.svg"></p>
 
 ## Abstract
-This repo contains IaaC scripts to aumtomate the followings:
+This repo contains DevOps\IaaC procedures to automate the followings:
 1. Provisioning of 3 CentOS virtual machines
 2. Creation of a 50 GB ext4 partition for Docker
 3. Installation of Docker
@@ -15,7 +15,7 @@ This repo contains IaaC scripts to aumtomate the followings:
 ## Prerequisites
 This code has been tested on a `windows 11` host with `vagrant` version `2.2.19`.
 
-By making use of the `Ansible Local` Vagrant Provider we are able to provision the guest using Ansible playbooks by executing ansible-playbook directly on the guest machine.
+By making use of the `Ansible Local` Vagrant provisioner we are able to provision the guest using Ansible playbooks by executing ansible-playbook directly on the guest machine.
 
 Followings are the required Vagrant Plugins:
 
@@ -35,3 +35,15 @@ An [ansible linting](https://ansible-lint.readthedocs.io/en/latest/) GitHub acti
 [![Ansible Lint](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml)
 
 Note that it fails because it cannot find some of the roles referenced in the playbook provisioning.yml:
+
+![alt text](https://github.com/R3DRUN3/centos_ansible_provisioning/blob/main/images/github_action.png)
+
+This is not, strictly speaking, a real error  but rather a false positive given by the fact that the procedure uses the vagrant [ansible_local](https://www.vagrantup.com/docs/provisioning/ansible_local) provisioner, which allows us to run playbooks on target machines.
+
+This way the ansible galaxy roles do not need to be inside the repo (which could weigh down the code base in case of playbooks that use hundreds of roles) 
+But they are dautomatically downloaded on targets machine via this line in the Vagrant file:
+
+```hcl
+ansible.galaxy_command = "sudo ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path} --force"
+```
+
