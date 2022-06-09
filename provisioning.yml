@@ -1,0 +1,62 @@
+---
+- name: CREATE 50 GB PARTITION AND INSTALL DOCKER 
+  hosts: docker_swarm_manager, docker_swarm_worker, bastion_node
+  become: true
+  vars:
+    disk_partition: "/dev/sda"
+    vm_user: vagrant
+    docker_config_path: "/etc/docker"
+    docker_log_max_files: "10"
+    docker_log_file_max_size: "10k"
+  tasks:
+    - name: ENABLE DOCKER AUTOMATIC STARTUP
+      service:
+        name: docker
+        state: started
+        enabled: true
+  roles:
+    - role: disk_partitioning
+    - role: haxorof.docker_ce
+      vars:
+        docker_version: "20.10.17-3.el7.x86_64" # <=== PINNED DOCKER VERSION
+        docker_users: ["{{ vm_user }}"]
+
+- name: SECURELY EXPOSE DOCKER DAEMON REST APIs
+  hosts: docker_swarm_manager, docker_swarm_worker, bastion_node
+  roles:
+    - role: bessonov.docker-remote-api
+      docker_remote_client_use_certs_as_default: true
+      docker_remote_server_force_deploy: true
+      docker_remote_client_become: true
+      docker_remote_certs_server_additional_subjects:
+        - "DNS:{{ ansible_hostname }}"
+        - "IP:{{ ansible_host }}"
+
+- name: DEPLOY DOCKER SWARM
+  hosts: docker_swarm_manager, docker_swarm_worker, bastion_node
+  become: true
+  roles:
+    - role: atosatto.docker-swarm
+      vars:
+        docker_swarm_interface: "eth1"
+
+- name: DEPLOY TEST SERVICE FROM VM  bastion_node to VM docker_swarm_manager
+  hosts: bastion_node
+  tasks:
+    - name: CHECK IF THE SERVICE ALREADY EXIST  
+      shell: docker service ls -f name=TEST_SERVICE | grep '\sTEST_SERVICE\s' | awk '{ print $1 }'
+      environment:
+        DOCKER_HOST: "tcp://192.168.10.11:2376"
+        DOCKER_TLS_VERIFY: 1
+      register: service_exists
+      changed_when: false
+    - name: CREATE NGINX SERVICE "TEST_SERVICE" ON DOCKER SWARM
+      command: docker service create --replicas 2 -p 80:80 --name TEST_SERVICE nginx
+      environment:
+        DOCKER_HOST: "tcp://192.168.10.11:2376"
+        DOCKER_TLS_VERIFY: 1
+      register: docker_service_deploy_result
+      when: service_exists.stdout | length == 0
+    - name: Show the result
+      debug:
+        var: docker_service_deploy_result

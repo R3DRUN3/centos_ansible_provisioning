@@ -1,0 +1,28 @@
+---
+- name: READ PARTITION DATA
+  community.general.parted: device="{{ disk_partition }}" unit=MiB
+  register: sda_info
+
+- name: PRINT PARTITION DATA
+  debug:
+    var: sda_info
+
+- name: CREATE DOCKER PARTITION
+  parted:
+    device: "{{ disk_partition }}"
+    number: 2
+    state: present
+    part_start: "{{ sda_info.partitions[0].end }}MiB"
+    part_end: "{{ sda_info.partitions[0].end + 51200 }}MiB"
+
+- name: FORMAT PARTION AS EXT4
+  filesystem:
+    dev: /dev/sda2
+    fstype: ext4
+
+- name: MOUNT DOCKER PARTITION
+  mount:
+    src: /dev/sda2
+    path: /var/lib/docker
+    state: mounted
+    fstype: ext4

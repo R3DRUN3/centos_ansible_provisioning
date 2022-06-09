@@ -1,0 +1,4 @@
+# Roles installed via Ansible Galaxy
+- src: haxorof.docker_ce
+- src: atosatto.docker-swarm
+- src: bessonov.docker-remote-api

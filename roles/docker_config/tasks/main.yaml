@@ -1,0 +1,15 @@
+- name: ADD USER PERMISSION FOR DOCKER
+  shell: "usermod -aG docker {{ vm_user }}"
+- name: GENERATING DOCKER DAEMON CONFIG FILE IN {{ docker_config_path }}
+  copy:
+    dest: "{{ docker_config_path }}/daemon.json"
+    content: |
+      {
+          "log-driver": "json-file",
+          "log-opts": {
+          "max-size": "{{ docker_log_file_max_size }}",
+          "max-file": "{{ docker_log_max_files }}"
+          }
+      }
+- name: RESTART DOCKER DAEMON
+  shell: "sudo systemctl start docker"

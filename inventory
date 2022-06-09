@@ -1,0 +1,8 @@
+[bastion_node]
+bastion_node ansible_host=192.168.10.13 ansible_connection=local
+
+[docker_swarm_manager]
+docker_swarm_manager ansible_host=192.168.10.11 ansible_connection=local
+
+[docker_swarm_worker]
+docker_swarm_worker ansible_host=192.168.10.12 ansible_connection=local
