@@ -29,3 +29,9 @@ Clone this repo and start the provisioning:
 git clone https://github.com/R3DRUN3/DevOps.git \
 && cd DevOps && Vagrant up
 ``` 
+## Github Action
+An [ansible linting](https://ansible-lint.readthedocs.io/en/latest/) GitHub action is associated with this repo:
+
+[![Ansible Lint](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml)
+
+Note that it fails because it cannot find some of the roles referenced in the playbook provisioning.yml:
