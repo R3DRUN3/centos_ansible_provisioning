@@ -15,7 +15,7 @@ This repo contains DevOps\IaaC procedures to automate the followings:
 ## Prerequisites
 This code has been tested on a `windows 11` host with `vagrant` version `2.2.19`.
 
-By making use of the `Ansible Local` Vagrant provisioner we are able to provision the guest using Ansible playbooks by executing ansible-playbook directly on the guest machine.
+By making use of the `Ansible Local` Vagrant provisioner we are able to provision the guest by executing ansible-playbook directly on the targets machine.
 
 Followings are the required Vagrant Plugins:
 
@@ -30,7 +30,7 @@ git clone https://github.com/R3DRUN3/DevOps.git \
 && cd DevOps && Vagrant up
 ``` 
 ## Github Action
-An [ansible linting](https://ansible-lint.readthedocs.io/en/latest/) GitHub action is associated with this repo:
+An [ansible linting](https://ansible-lint.readthedocs.io/en/latest/) GitHub action is associated with push on this repo main branch:
 
 [![Ansible Lint](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/R3DRUN3/centos_ansible_provisioning/actions/workflows/ansible-lint.yml)
 
@@ -38,10 +38,10 @@ Note that it fails because it cannot find some of the roles referenced in the pl
 
 ![alt text](https://github.com/R3DRUN3/centos_ansible_provisioning/blob/main/images/github_action.png)
 
-This is not, strictly speaking, a real error  but rather a false positive given by the fact that the procedure uses the vagrant [ansible_local](https://www.vagrantup.com/docs/provisioning/ansible_local) provisioner, which allows us to run playbooks on target machines.
+This is not a real error  but rather a false positive given by the fact that the procedure uses the vagrant [ansible_local](https://www.vagrantup.com/docs/provisioning/ansible_local) provisioner, which allows us to run playbooks on target machines.
 
 This way the ansible galaxy roles do not need to be inside the repo (which could weigh down the code base in case of playbooks that use hundreds of roles) 
-But they are dautomatically downloaded on targets machine via this line in the Vagrant file:
+but they are automatically downloaded on targets machine via this line in the Vagrant file:
 
 ```hcl
 ansible.galaxy_command = "sudo ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path} --force"
