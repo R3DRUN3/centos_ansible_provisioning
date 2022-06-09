@@ -1,0 +1,30 @@
+---
+name: Ansible Lint
+'on': 
+    # Trigger the workflow on push requests,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@master
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install ansible ansible-lint yamllint
+
+      - name: Lint code.
+        run: |
+          ansible-playbook provisioning.yml --syntax-check
+          ansible-lint provisioning.yml
