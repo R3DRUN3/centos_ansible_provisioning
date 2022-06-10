@@ -26,8 +26,8 @@ Followings are the required Vagrant Plugins:
 Clone this repo and start the provisioning:
 
 ```console
-git clone https://github.com/R3DRUN3/DevOps.git \
-&& cd DevOps && Vagrant up
+git clone https://github.com/R3DRUN3/centos_ansible_provisioning.git \
+&& cd centos_ansible_provisioning && Vagrant up
 ``` 
 ## Github Action
 An [ansible linting](https://ansible-lint.readthedocs.io/en/latest/) GitHub action is associated with push on this repo main branch:
