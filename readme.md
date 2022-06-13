@@ -3,7 +3,7 @@
 <p align="center"><img width="180" height="180" src="https://github.com/yurijserrano/Github-Profile-Readme-Logos/blob/master/cloud/ansible.svg"></p>
 
 ## Abstract
-This repo contains DevOps\IaaC procedures to automate the followings:
+This repo contains DevOps\IaC procedures to automate the followings:
 1. Provisioning of 3 CentOS virtual machines (one control node and two worker nodes)
 2. Creation of a 50 GB ext4 partition for Docker
 3. Installation of Docker
@@ -13,7 +13,7 @@ This repo contains DevOps\IaaC procedures to automate the followings:
 7. Interact and deploy services on the Swarm from the control node.
 
 ## Prerequisites
-This code has been tested on a `windows 11` host with `vagrant` version `2.2.19`.
+This code has been tested on a `windows 11` host with `vagrant` version `2.2.19` and virtual box version `6.1.34`.
 
 By making use of the `Ansible Local` Vagrant provisioner we are able to provision the guest by executing ansible-playbook directly on the targets machine.
 
